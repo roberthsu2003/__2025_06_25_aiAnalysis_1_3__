@@ -1,16 +1,17 @@
-import tools     
+import tools
+from tools import play_game,Empty
 
 def main():
     try:
         play_count = 0
         while(True):
             play_count += 1
-            tools.play_game()
+            play_game()
             is_continue = input("您還要繼續嗎(y,n)?")
             if is_continue == "n":
                 break
             
-        print(f"您共玩了{play_count}次")
+        print(f"{tools.user_name}共玩了{play_count}次")
         print("遊戲結束")
     except ValueError:
         print("格式錯誤")
