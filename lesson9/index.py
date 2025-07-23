@@ -1,3 +1,4 @@
+#from box import tools
 import box
 
 def main():
@@ -5,7 +6,7 @@ def main():
         play_count = 0
         while(True):
             play_count += 1
-            box.play_game()
+            box.tools.play_game()
             is_continue = input("您還要繼續嗎(y,n)?")
             if is_continue == "n":
                 break
