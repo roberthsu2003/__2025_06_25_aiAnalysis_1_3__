@@ -18,10 +18,19 @@ def sample_names_from_file(file_name: str, nums: int = 1) -> list[str]:
     回傳:
         list[str]: 隨機取出的姓名列表。
     """
-    with open(file_name, encoding="utf-8") as file:
-        content: str = file.read()
-        names: list[str] = content.split()
-        return random.sample(names, nums)
+    try:
+        with open(file_name, encoding="utf-8") as file:
+            content: str = file.read()
+            names: list[str] = content.split()
+            if not names:
+                raise ValueError("檔案內容為空，無法取出姓名。")
+            return random.sample(names, nums)
+    except FileNotFoundError:
+        print(f"檔案 {file_name} 不存在，請檢查檔案路徑。")
+        return []
+    except ValueError as e:
+        print(e)
+        return []
 
 def generate_scores_for_names(names: list[str]) -> list[dict]:
     """
@@ -79,23 +88,25 @@ def analyze_scores(students: list[dict]):
         total_scores.extend(scores)
         average_score = sum(scores) / len(scores)
 
-        if not highest_student or average_score > highest_student["average"]:
-            highest_student = {"name": student["姓名"], "average": average_score}
+        if not highest_student or average_score > highest_student["平均分數"]:
+            highest_student = {"姓名": student["姓名"], "平均分數": average_score}
 
-        if not lowest_student or average_score < lowest_student["average"]:
-            lowest_student = {"name": student["姓名"], "average": average_score}
+        if not lowest_student or average_score < lowest_student["平均分數"]:
+            lowest_student = {"姓名": student["姓名"], "平均分數": average_score}
 
     class_average = sum(total_scores) / len(total_scores)
 
     print("成績分析:")
     print(f"- 全班平均成績:{class_average:.1f}分")
-    print(f"- 最高分學生: {highest_student['name']}({highest_student['average']:.1f}分)")
-    print(f"- 最低分學生: {lowest_student['name']}({lowest_student['average']:.1f}分)")
+    print(f"- 最高分學生: {highest_student['姓名']}({highest_student['平均分數']:.1f}分)")
+    print(f"- 最低分學生: {lowest_student['姓名']}({lowest_student['平均分數']:.1f}分)")
 
 
 def main():
     print("=== 學生成績管理系統 ===\n\n")
     names: list[str] = sample_names_from_file("names.txt", nums=3)
+    if not names:
+        return
     students: list[dict] = generate_scores_for_names(names)
     print_student_scores(students)
     analyze_scores(students)  # 新增分析成績的功能
