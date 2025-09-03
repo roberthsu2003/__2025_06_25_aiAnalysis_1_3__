@@ -5,7 +5,7 @@ app = Flask(__name__)
 # 首頁路由
 @app.route('/')
 def home():
-    return '歡迎來到 Flask 應用！'
+    return render_template('home.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
