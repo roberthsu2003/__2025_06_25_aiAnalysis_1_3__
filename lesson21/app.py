@@ -3,7 +3,6 @@ from google import genai
 from dotenv import load_dotenv
 import os
 
-
 load_dotenv()
 
 
@@ -29,3 +28,7 @@ def gemini():
                 contents=user_input
             )
     return render_template('gemini.html', response=response)
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
