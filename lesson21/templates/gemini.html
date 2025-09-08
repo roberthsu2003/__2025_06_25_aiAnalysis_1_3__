@@ -66,7 +66,11 @@
         {% if response %}
         <div class="response">
             <h3>AI 回應：</h3>
-            <pre>{{ response.text }}</pre>
+            {% if html_content %}
+                <div>{{ html_content | safe }}</div>
+            {% else %}
+                <pre>{{ response.text }}</pre>
+            {% endif %}
         </div>
         {% endif %}
     </div>

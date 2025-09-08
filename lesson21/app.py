@@ -2,6 +2,7 @@ from flask import Flask, render_template, request
 from google import genai
 from dotenv import load_dotenv
 import os
+import markdown2
 
 load_dotenv()
 
@@ -20,14 +21,19 @@ def home():
 @app.route('/gemini', methods=['GET', 'POST'])
 def gemini():
     response = None
+    html_content = None
     if request.method == 'POST':
         user_input = request.form.get('user_input')
         if user_input:
+            # 生成回應
             response = client.models.generate_content(
                 model="gemini-2.5-flash",
                 contents=user_input
             )
-    return render_template('gemini.html', response=response)
+            # 將回應轉換為 HTML
+            if response and response.text:
+                html_content = markdown2.markdown(response.text)
+    return render_template('gemini.html', response=response, html_content=html_content)
 
 if __name__ == '__main__':
     app.run(debug=True)
