@@ -53,15 +53,47 @@
             word-wrap: break-word;
             margin: 0;
         }
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            background-color: #e3f2fd;
+            border-radius: 4px;
+            border: 1px solid #2196F3;
+        }
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #2196F3;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Gemini AI 對話</h1>
-        <form method="POST">
-            <textarea name="user_input" placeholder="請輸入您的問題..."></textarea>
-            <button type="submit">送出</button>
+        <form method="POST" id="geminiForm">
+            <textarea name="user_input" id="userInput" placeholder="請輸入您的問題..." required></textarea>
+            <button type="submit" id="submitBtn">送出</button>
         </form>
+        
+        <div class="loading" id="loadingDiv">
+            <div class="loading-spinner"></div>
+            正在處理您的請求，請稍候...
+        </div>
         
         {% if response %}
         <div class="response">
@@ -74,5 +106,28 @@
         </div>
         {% endif %}
     </div>
+    
+    <script>
+        document.getElementById('geminiForm').addEventListener('submit', function(e) {
+            const submitBtn = document.getElementById('submitBtn');
+            const loadingDiv = document.getElementById('loadingDiv');
+            const userInput = document.getElementById('userInput');
+            
+            // 檢查輸入是否為空
+            if (userInput.value.trim() === '') {
+                alert('請輸入您的問題');
+                e.preventDefault();
+                return;
+            }
+            
+            // 顯示載入動畫
+            loadingDiv.style.display = 'block';
+            submitBtn.disabled = true;
+            submitBtn.textContent = '處理中...';
+            
+            // 滾動到載入區域
+            loadingDiv.scrollIntoView({ behavior: 'smooth' });
+        });
+    </script>
 </body>
 </html>
